@@ -6,6 +6,7 @@ import csv
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier # RandomForestClassifier, GradientBoostingClassifier
@@ -73,7 +74,8 @@ def select_best_model(X_train, y_train):
   models = {
     'SVM': SVC(probability=True, random_state=42),
     'KNN': KNeighborsClassifier(),
-    'Logistic Regression': LogisticRegression(random_state=42)
+    'Logistic Regression': LogisticRegression(random_state=42),
+    'XGB': XGBClassifier(eval_metric='logloss', random_state=42)
   }
 
   best_model = None
@@ -102,6 +104,7 @@ def select_best_model(X_train, y_train):
 
 # Main_1
 models=[]
+models_name = []
 dataset_aucs=[]
 
 for i in range(len(dataset_names)):
@@ -120,6 +123,8 @@ for i in range(len(dataset_names)):
 
   model = grid_search.best_estimator_
   models.append(model)
+  models_name.append("Random Forest")
+
 
   tmp_y_prob = model.predict_proba(tmp_X_test)[:, 1]
   tmp_auc = roc_auc_score(tmp_y_test, tmp_y_prob)
@@ -132,6 +137,7 @@ for i in range(len(dataset_names)):
   if auc > tmp_auc:
     models[i] = best_model
     dataset_aucs[i] = auc
+    models_name[i] = best_model_name
 
 # Main_2
 y_predicts = []
