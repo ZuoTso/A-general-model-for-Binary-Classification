@@ -6,6 +6,7 @@ import csv
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import lightgbm as lgb
 from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
@@ -75,7 +76,8 @@ def select_best_model(X_train, y_train):
     'SVM': SVC(probability=True, random_state=42),
     'KNN': KNeighborsClassifier(),
     'Logistic Regression': LogisticRegression(random_state=42),
-    'XGB': XGBClassifier(eval_metric='logloss', random_state=42)
+    'XGB': XGBClassifier(eval_metric='logloss', random_state=42),
+    # 'LGB': lgb.LGBMClassifier(n_estimators=200, max_depth=5, learning_rate=0.1, random_state=42)
   }
 
   best_model = None

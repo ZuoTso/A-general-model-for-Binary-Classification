@@ -3,6 +3,7 @@ import csv
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import lightgbm as lgb
 import xgboost as xgb
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
@@ -18,7 +19,7 @@ X_trains=[]
 y_trains=[]
 X_tests=[]
 for folder_name in os.listdir("./Competition_data"):
-  if folder_name == "Dataset_11":
+  if folder_name == "Dataset_15":
     dataset_names.append(folder_name)
     X_trains.append(pd.read_csv(f"./Competition_data/{folder_name}/X_train.csv",header=0))
     y_trains.append(pd.read_csv(f"./Competition_data/{folder_name}/y_train.csv",header=0))
@@ -54,17 +55,19 @@ for i in range(len(dataset_names)):
   X_train, X_test = preprocess_data(X_train, X_test)
   processed_X_trains.append(X_train)
   processed_X_tests.append(X_test)
-  # print(processed_X_trains)
-  # print(processed_X_tests)
+  print(processed_X_trains)
+  print(processed_X_tests)
 
 X_train_split, X_test_split, y_train_split, y_test_split = train_test_split(
       X_train, y_trains[0], test_size=0.2, random_state=42, stratify=y_trains[0]
   )
 
 # Good
-model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss')
+# model = SVC(kernel='linear', class_weight='balanced', probability=True)
+model = lgb.LGBMClassifier(n_estimators=200, max_depth=5, learning_rate=0.1, random_state=42)
 
 # Bad
+# model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss')
 # model = GradientBoostingClassifier(n_estimators=100, random_state=42)
 # model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train_split, y_train_split)
