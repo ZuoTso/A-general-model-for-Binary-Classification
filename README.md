@@ -1,1 +1,1 @@
-# NCKU-Data-Science-Competition_1
+# A-general-model-for-Binary-Classification
